@@ -1,0 +1,43 @@
+name: ci
+on:
+  push:
+    branches: [main]
+    paths: ['vote/**', 'result/**', 'worker/**']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        service: [vote, result, worker]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: ./${{ matrix.service }}
+          push: true
+          tags: ghcr.io/spideyx883/${{ matrix.service }}:${{ github.sha }}
+
+  update-tags:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          for s in vote result worker; do
+            sed -i "s|image: .*/$s:.*|image: ghcr.io/spideyx883/$s:${{ github.sha }}|" k8s-specifications/$s-deployment.yaml
+          done
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git commit -am "update image tags"
+          git push

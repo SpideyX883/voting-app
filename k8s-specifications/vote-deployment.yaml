@@ -15,7 +15,7 @@ spec:
         app: vote
     spec:
       containers:
-      - image: dockersamples/examplevotingapp_vote
+      - image: ghcr.io/spideyx883/vote:latest
         name: vote
         ports:
         - containerPort: 80

@@ -15,7 +15,7 @@ spec:
         app: vote
     spec:
       containers:
-      - image: ghcr.io/spideyx883/vote:2e8004268e89bb8c3b04a309655c422e49e415f0
+      - image: ghcr.io/spideyx883/vote:5175af457891928883dad587a05d206aff8e1c69
         name: vote
         ports:
         - containerPort: 80

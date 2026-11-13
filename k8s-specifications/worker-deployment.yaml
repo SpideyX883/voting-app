@@ -15,5 +15,5 @@ spec:
         app: worker
     spec:
       containers:
-      - image: ghcr.io/spideyx883/worker:latest
+      - image: ghcr.io/spideyx883/worker:2e8004268e89bb8c3b04a309655c422e49e415f0
         name: worker
